@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_utils</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>text_utils</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/liao/Desktop/my_py_module/text_utils.py">/home/liao/Desktop/my_py_module/text_utils.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_utils.html#TF_IDF">TF_IDF</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TF_IDF">class <strong>TF_IDF</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TF_IDF">TF_IDF</a>(docset:&nbsp;Union[dict,&nbsp;list])<br>
+&nbsp;<br>
+Compute&nbsp;tf-idf&nbsp;scores&nbsp;for&nbsp;terms&nbsp;in&nbsp;a&nbsp;list&nbsp;of&nbsp;documents<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TF_IDF-__init__"><strong>__init__</strong></a>(self, docset: Union[dict, list])</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#TF_IDF">TF_IDF</a>&nbsp;obj<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+docset&nbsp;:&nbsp;dict&nbsp;or&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dict&nbsp;with&nbsp;key&nbsp;being&nbsp;document&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;value&nbsp;being&nbsp;document&nbsp;content&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;documents.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;content&nbsp;of&nbsp;each&nbsp;document&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;tokens.<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+Exception<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`docset`&nbsp;should&nbsp;be&nbsp;a&nbsp;2-level&nbsp;nested&nbsp;list,&nbsp;with&nbsp;the&nbsp;first&nbsp;level<br>
+&nbsp;&nbsp;&nbsp;&nbsp;being&nbsp;the&nbsp;documents&nbsp;and&nbsp;the&nbsp;second&nbsp;level&nbsp;being&nbsp;the&nbsp;tokens&nbsp;in&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;documents</tt></dd></dl>
+
+<dl><dt><a name="TF_IDF-score"><strong>score</strong></a>(self, word: str, doc_id)</dt><dd><tt>Compute&nbsp;tf-idf&nbsp;score&nbsp;of&nbsp;a&nbsp;term&nbsp;in&nbsp;a&nbsp;particular&nbsp;document<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+word&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;term&nbsp;to&nbsp;compute&nbsp;the&nbsp;score<br>
+doc_id&nbsp;:&nbsp;int&nbsp;or&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;id&nbsp;specifying&nbsp;the&nbsp;document&nbsp;in&nbsp;`docset`&nbsp;when&nbsp;initializing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#TF_IDF">TF_IDF</a>&nbsp;obj<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;tf-idf&nbsp;score&nbsp;of&nbsp;the&nbsp;term<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&gt;&gt;&gt;&nbsp;docset&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc0':&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc1':&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc2':&nbsp;['b',&nbsp;'c',&nbsp;'c',&nbsp;'c']<br>
+}<br>
+&gt;&gt;&gt;&nbsp;tfidf&nbsp;=&nbsp;<a href="#TF_IDF">TF_IDF</a>(docset)<br>
+&gt;&gt;&gt;&nbsp;tfidf.<a href="#TF_IDF-score">score</a>('a',&nbsp;'doc1')<br>
+0.32437208648653154<br>
+&gt;&gt;&gt;&nbsp;docset&nbsp;=&nbsp;[<br>
+&nbsp;&nbsp;&nbsp;&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;['b',&nbsp;'c',&nbsp;'c',&nbsp;'c']<br>
+]<br>
+&gt;&gt;&gt;&nbsp;tfidf&nbsp;=&nbsp;<a href="#TF_IDF">TF_IDF</a>(docset)<br>
+&gt;&gt;&gt;&nbsp;tfidf.<a href="#TF_IDF-score">score</a>('a',&nbsp;1)<br>
+0.32437208648653154</tt></dd></dl>
+
+<dl><dt><a name="TF_IDF-score_all"><strong>score_all</strong></a>(self)</dt><dd><tt>Compute&nbsp;tf-idf&nbsp;scores&nbsp;for&nbsp;all&nbsp;terms&nbsp;in&nbsp;the&nbsp;docset<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+dict<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;dict&nbsp;in&nbsp;the&nbsp;format&nbsp;of:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&lt;docid&gt;":&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&lt;word&gt;":&nbsp;&lt;tf-idf-score&gt;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&lt;word&gt;":&nbsp;&lt;tf-idf-score&gt;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"&lt;docid&gt;":&nbsp;{...},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&gt;&gt;&gt;&nbsp;docset&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc0':&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc1':&nbsp;['a',&nbsp;'a',&nbsp;'a',&nbsp;'a',&nbsp;'c'],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'doc2':&nbsp;['b',&nbsp;'c',&nbsp;'c',&nbsp;'c']<br>
+}<br>
+&gt;&gt;&gt;&nbsp;tfidf&nbsp;=&nbsp;<a href="#TF_IDF">TF_IDF</a>(docset)<br>
+&gt;&gt;&gt;&nbsp;tfidf.<a href="#TF_IDF-score_all">score_all</a>()<br>
+{'doc0':&nbsp;{'a':&nbsp;0.3040988310811233,&nbsp;'c':&nbsp;0.0},&nbsp;'doc1':&nbsp;{'a':&nbsp;0.32437208648653154,&nbsp;'c':&nbsp;0.0},&nbsp;'doc2':&nbsp;{'b':&nbsp;0.27465307216702745,&nbsp;'c':&nbsp;0.0}}</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-all_zh"><strong>all_zh</strong></a>(x: str)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;string&nbsp;is&nbsp;only&nbsp;comprised&nbsp;of&nbsp;Chinese&nbsp;characters<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+x&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;to&nbsp;check<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;input&nbsp;string&nbsp;has&nbsp;only&nbsp;Chinese&nbsp;characters,&nbsp;else&nbsp;False</tt></dd></dl>
+ <dl><dt><a name="-has_zh"><strong>has_zh</strong></a>(x: str)</dt><dd><tt>Check&nbsp;whether&nbsp;a&nbsp;string&nbsp;contains&nbsp;Chinese&nbsp;characters<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+x&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;to&nbsp;check<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;input&nbsp;contains&nbsp;Chinese&nbsp;character,&nbsp;else&nbsp;False</tt></dd></dl>
+ <dl><dt><a name="-strF2H"><strong>strF2H</strong></a>(s)</dt><dd><tt>全形轉半形<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+s&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;含有全形字的字串<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;全為半形字的字串<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&gt;&gt;&gt;&nbsp;<a href="#-strF2H">strF2H</a>('ａａａ')<br>
+'aaa'</tt></dd></dl>
+ <dl><dt><a name="-strH2F"><strong>strH2F</strong></a>(s)</dt><dd><tt>半形轉全形<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+s&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;含有半形字的字串<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;全為全形字的字串<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&gt;&gt;&gt;&nbsp;<a href="#-strH2F">strH2F</a>('aaa')<br>
+'ａａａ'</tt></dd></dl>
+ <dl><dt><a name="-str_replace"><strong>str_replace</strong></a>(s, charset: str, replacement='')</dt><dd><tt>Replace&nbsp;or&nbsp;remove&nbsp;multiple&nbsp;characters&nbsp;from&nbsp;a&nbsp;string<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+s&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;to&nbsp;replace<br>
+charset&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;string&nbsp;of&nbsp;characters&nbsp;to&nbsp;replace&nbsp;or&nbsp;remove&nbsp;from&nbsp;`s`<br>
+replacement&nbsp;:&nbsp;str,&nbsp;optional<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Replacement&nbsp;string,&nbsp;by&nbsp;default&nbsp;'',&nbsp;which&nbsp;is&nbsp;equivalent<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;removing&nbsp;characters&nbsp;in&nbsp;`charset`&nbsp;from&nbsp;`s`<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;string&nbsp;with&nbsp;replacement&nbsp;inserted<br>
+&nbsp;<br>
+Examples<br>
+--------<br>
+&gt;&gt;&gt;&nbsp;<a href="#-str_replace">str_replace</a>('abcde',&nbsp;'ce',&nbsp;'_')<br>
+'ab_d_'<br>
+&gt;&gt;&gt;&nbsp;<a href="#-str_replace">str_replace</a>('abcde',&nbsp;'ce')<br>
+'abd'</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>Union</strong> = typing.Union</td></tr></table>
+</body></html>
