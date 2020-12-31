@@ -19,7 +19,6 @@ Installation
    :caption: Contents
    :numbered:
 
-   index
    string
    lexstats
 
