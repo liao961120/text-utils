@@ -1,15 +1,17 @@
-# Utility functions for (Chinese) text processing
+# Miscellaneous functions for (Chinese) text processing
 
-All functions are written in `text_utils`.
+This is a my collection of some commonly used functions for NLP and text processing, packaged for easy installation and documentation.
 
+## Installation
 
-## Documentation
-
-<https://yongfu.name/yft>
+```bash
+pip install yft
+```
 
 
 ## Build doc
 
 ```bash
-bash build.sh
+cd docs
+make html
 ```
