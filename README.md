@@ -5,7 +5,7 @@ All functions are written in `text_utils`.
 
 ## Documentation
 
-<https://yongfu.name/text-utils>
+<https://yongfu.name/yft>
 
 
 ## Build doc
