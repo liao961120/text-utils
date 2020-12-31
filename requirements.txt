@@ -1,0 +1,5 @@
+tqdm
+networkx
+sphinx
+numpydoc
+sphinx-rtd-theme

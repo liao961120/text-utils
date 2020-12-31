@@ -10,12 +10,12 @@ from tqdm.auto import tqdm
 ###############################
 # String manipulation
 ###############################
-def strF2H(s):
+def strF2H(x):
     """全形轉半形
 
     Parameters
     ----------
-    s : str
+    x : str
         含有全形字的字串
 
     Returns
@@ -39,12 +39,12 @@ def strF2H(s):
     return rstring
 
 
-def strH2F(s):
+def strH2F(x):
     """半形轉全形
 
     Parameters
     ----------
-    s : str
+    x : str
         含有半形字的字串
 
     Returns
@@ -68,12 +68,12 @@ def strH2F(s):
     return rstring
 
 
-def str_replace(s, charset: str, replacement=''):
+def str_replace(x, charset: str, replacement=''):
     """Replace or remove multiple characters from a string
 
     Parameters
     ----------
-    s : str
+    x : str
         String to replace
     charset : str
         A string of characters to replace or remove from `s`
