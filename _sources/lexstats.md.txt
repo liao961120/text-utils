@@ -1,0 +1,16 @@
+Lexical Statistics
+==================
+
+
+## Level 2
+
+This page provide documentation for ...
+
+
+```eval_rst
+.. autoclass:: yft.lexstats.TF_IDF
+    :members:
+
+.. autoclass:: yft.lexstats.ContextualDiversity
+    :members:
+```

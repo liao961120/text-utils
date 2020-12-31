@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>yft.lexstats &mdash; yft 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> yft
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../string.html">1. String Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lexstats.html">2. Lexical Statistics</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">yft</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>yft.lexstats</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for yft.lexstats</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Statistics for lexical items</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">.corp_readers</span> <span class="kn">import</span> <span class="n">read_rawtext_as_words</span>
+
+
+<div class="viewcode-block" id="TF_IDF"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.TF_IDF">[docs]</a><span class="k">class</span> <span class="nc">TF_IDF</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compute tf-idf scores for terms in a list of documents</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docset</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a TF_IDF obj</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        docset : dict or list</span>
+<span class="sd">            A dict with key being document name</span>
+<span class="sd">            and value being document content or a list of documents. </span>
+<span class="sd">            The content of each document is a list of tokens.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Exception</span>
+<span class="sd">            `docset` should be a 2-level nested list, with the first level</span>
+<span class="sd">            being the documents and the second level being the tokens in the </span>
+<span class="sd">            documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">docset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc_word_freq</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># 記錄資訊以供 self._tf() 計算</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc_size</span> <span class="o">=</span> <span class="p">{}</span>       <span class="c1"># 記錄資訊以供 self._tf() 計算</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idf_cache</span> <span class="o">=</span> <span class="p">{}</span>      <span class="c1"># 記錄已經算過的 idf 分數</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">docset</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">docset</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">content</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">docset</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">docname</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">docset</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;document content should be a list of tokens, not type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doc_size</span><span class="p">[</span><span class="n">docname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doc_word_freq</span><span class="p">[</span><span class="n">docname</span><span class="p">]</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">doc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">docname</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">words</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_tf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc_word_freq</span><span class="p">[</span><span class="n">doc_id</span><span class="p">][</span><span class="n">word</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc_size</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_idf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idf_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idf_cache</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc_word_freq</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">idf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">/</span><span class="n">df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idf_cache</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">idf</span>
+        <span class="k">return</span> <span class="n">idf</span>
+
+<div class="viewcode-block" id="TF_IDF.score"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.TF_IDF.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute tf-idf score of a term in a particular document</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        word : str</span>
+<span class="sd">            The term to compute the score</span>
+<span class="sd">        doc_id : int or str</span>
+<span class="sd">            The id specifying the document in `docset` when initializing</span>
+<span class="sd">            the TF_IDF obj</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            The tf-idf score of the term</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; docset = {</span>
+<span class="sd">            &#39;doc0&#39;: [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            &#39;doc1&#39;: [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            &#39;doc2&#39;: [&#39;b&#39;, &#39;c&#39;, &#39;c&#39;, &#39;c&#39;]</span>
+<span class="sd">        }</span>
+<span class="sd">        &gt;&gt;&gt; tfidf = TF_IDF(docset)</span>
+<span class="sd">        &gt;&gt;&gt; tfidf.score(&#39;a&#39;, &#39;doc1&#39;)</span>
+<span class="sd">        0.32437208648653154</span>
+<span class="sd">        &gt;&gt;&gt; docset = [</span>
+<span class="sd">            [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            [&#39;b&#39;, &#39;c&#39;, &#39;c&#39;, &#39;c&#39;]</span>
+<span class="sd">        ]</span>
+<span class="sd">        &gt;&gt;&gt; tfidf = TF_IDF(docset)</span>
+<span class="sd">        &gt;&gt;&gt; tfidf.score(&#39;a&#39;, 1)</span>
+<span class="sd">        0.32437208648653154</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">words</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">` not found in docset&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tf</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idf</span><span class="p">(</span><span class="n">word</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TF_IDF.score_all"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.TF_IDF.score_all">[docs]</a>    <span class="k">def</span> <span class="nf">score_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute tf-idf scores for all terms in the docset</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dict in the format of:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                {</span>
+<span class="sd">                    &quot;&lt;docid&gt;&quot;: {</span>
+<span class="sd">                        &quot;&lt;word&gt;&quot;: &lt;tf-idf-score&gt;,</span>
+<span class="sd">                        &quot;&lt;word&gt;&quot;: &lt;tf-idf-score&gt;,</span>
+<span class="sd">                        ...</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &quot;&lt;docid&gt;&quot;: {...},</span>
+<span class="sd">                    ...</span>
+<span class="sd">                }</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; docset = {</span>
+<span class="sd">            &#39;doc0&#39;: [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            &#39;doc1&#39;: [&#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;a&#39;, &#39;c&#39;],</span>
+<span class="sd">            &#39;doc2&#39;: [&#39;b&#39;, &#39;c&#39;, &#39;c&#39;, &#39;c&#39;]</span>
+<span class="sd">        }</span>
+<span class="sd">        &gt;&gt;&gt; tfidf = TF_IDF(docset)</span>
+<span class="sd">        &gt;&gt;&gt; tfidf.score_all()</span>
+<span class="sd">        {&#39;doc0&#39;: {&#39;a&#39;: 0.3040988310811233, &#39;c&#39;: 0.0}, &#39;doc1&#39;: {&#39;a&#39;: 0.32437208648653154, &#39;c&#39;: 0.0}, &#39;doc2&#39;: {&#39;b&#39;: 0.27465307216702745, &#39;c&#39;: 0.0}}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">docid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc_ids</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">docid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc_word_freq</span><span class="p">[</span><span class="n">docid</span><span class="p">]:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">docid</span><span class="p">][</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">docid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div></div>
+
+
+<div class="viewcode-block" id="ContextualDiversity"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.ContextualDiversity">[docs]</a><span class="k">class</span> <span class="nc">ContextualDiversity</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Compute contextual diversity scores for words in a corpus</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">tk_sep</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u3000</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">WINDOW</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">SM</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.75</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize corpus and compute PPMI co-occurrence scores</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fp : str</span>
+<span class="sd">            Path to plain text corpus file. Each line is a sentence,</span>
+<span class="sd">            and tokens are separated by a separater specified in `tk_sep`</span>
+<span class="sd">        tk_sep : str</span>
+<span class="sd">            Token separator in the corpus raw text file</span>
+<span class="sd">        WINDOW : int, optional</span>
+<span class="sd">            Sliding window size used in PPMI computation, by default 4</span>
+<span class="sd">        SM : float, optional</span>
+<span class="sd">            Smoothing factor used in PPMI computation, by default 0.75</span>
+<span class="sd">        </span>
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Levy, O., Goldberg, Y., &amp; Dagan, I. (2015). Improving Distributional Similarity with Lessons Learned from Word Embeddings. Transactions of the Association for Computational Linguistics, 3, 211–225.</span>
+<span class="sd">        Jurafsky, D. (2015, July). Distributional (Vector) Semantics. https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Construct corpus</span>
+        <span class="n">corp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">read_rawtext_as_words</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">tk_sep</span><span class="p">))</span>
+        <span class="n">corp_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corp</span><span class="p">)</span>
+
+        <span class="c1"># Count co-occurrences of all (target, context) pairs</span>
+        <span class="n">cooccur</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">word_freq</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tgt_w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">corp</span><span class="p">):</span>
+            <span class="c1"># Record total freq</span>
+            <span class="k">if</span> <span class="n">tgt_w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">word_freq</span><span class="p">:</span> <span class="n">word_freq</span><span class="p">[</span><span class="n">tgt_w</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">word_freq</span><span class="p">[</span><span class="n">tgt_w</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Record cooccurences in context window</span>
+            <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">WINDOW</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">corp_size</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">WINDOW</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">l_cntx</span> <span class="o">=</span> <span class="n">corp</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">r_cntx</span> <span class="o">=</span> <span class="n">corp</span><span class="p">[(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span><span class="n">e</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">!=</span> <span class="n">corp_size</span> <span class="k">else</span> <span class="p">[]</span>
+            
+            <span class="k">for</span> <span class="n">cntx_w</span> <span class="ow">in</span> <span class="n">l_cntx</span> <span class="o">+</span> <span class="n">r_cntx</span><span class="p">:</span>
+                <span class="c1"># Update cooccurrence count</span>
+                <span class="n">pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cooccur</span><span class="p">:</span> <span class="n">cooccur</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">cooccur</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Update target, context count</span>
+                <span class="k">if</span> <span class="n">tgt_w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span> <span class="n">target</span><span class="p">[</span><span class="n">tgt_w</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">cntx_w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span> <span class="n">context</span><span class="p">[</span><span class="n">cntx_w</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">target</span><span class="p">[</span><span class="n">tgt_w</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">context</span><span class="p">[</span><span class="n">cntx_w</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_w_freq</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cntx_w_freq</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cooccur_freq</span> <span class="o">=</span> <span class="n">cooccur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_freq</span> <span class="o">=</span> <span class="n">word_freq</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_w_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_w_freq</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cntx_w_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">**</span><span class="n">SM</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cntx_w_freq</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coocurr_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooccur_freq</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SM</span> <span class="o">=</span> <span class="n">SM</span>
+
+
+<div class="viewcode-block" id="ContextualDiversity.diversity_scores"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.ContextualDiversity.diversity_scores">[docs]</a>    <span class="k">def</span> <span class="nf">diversity_scores</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span><span class="n">Sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_vocab_size</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Quantify contextual diversity of each word in the corpus</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        words : Sequence, optional</span>
+<span class="sd">            Words to compute scores, by default None</span>
+<span class="sd">        return_graph : bool, optional</span>
+<span class="sd">            Whether to return the co-occurence network of the words, </span>
+<span class="sd">            by default False</span>
+<span class="sd">        max_vocab_size : int, optional</span>
+<span class="sd">            The max size of vocabulary used to construct the word </span>
+<span class="sd">            co-occurrence network. Only the top-n (n = `max_vocab_size`) </span>
+<span class="sd">            frequent words in the corpus are used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary recording contextual diversity scores of the</span>
+<span class="sd">            words.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Implementation of the contexual diversity (polysemous) measure for </span>
+<span class="sd">        words in Hamilton et al. (2016). For the purpose of intuitive </span>
+<span class="sd">        interpretation, the original scores (local clustering coefficients) </span>
+<span class="sd">        are reversed by (1 - ori_score), such that a higher score indicates </span>
+<span class="sd">        higher contextual diversity of a word.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). Diachronic Word </span>
+<span class="sd">        Embeddings Reveal Statistical Laws of Semantic Change. In Proceedings </span>
+<span class="sd">        of the 54th Annual Meeting of the Association for Computational </span>
+<span class="sd">        Linguistics (pp. 1489–1501).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vocab</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_freq</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">max_vocab_size</span><span class="p">]</span>
+        <span class="n">vocab</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">]</span>
+
+        <span class="c1"># Construct co-occurrence network</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">vocab</span><span class="p">,</span> <span class="n">vocab</span><span class="p">):</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">tgt_w</span> <span class="o">==</span> <span class="n">cntx_w</span><span class="p">:</span> <span class="k">continue</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pmi</span><span class="p">(</span><span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">return_graph</span><span class="p">:</span>
+                    <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">][</span><span class="s1">&#39;ppmi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">tgt_w</span><span class="p">)</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">cntx_w</span><span class="p">)</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">local_clust_coef</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">clustering</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">words</span><span class="p">)</span>
+        <span class="n">diversity</span> <span class="o">=</span> <span class="p">{</span> 
+            <span class="n">k</span><span class="p">:(</span><span class="mi">1</span><span class="o">-</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">local_clust_coef</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> 
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">return_graph</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">diversity</span><span class="p">,</span> <span class="n">G</span>
+        <span class="k">return</span> <span class="n">diversity</span></div>
+
+
+<div class="viewcode-block" id="ContextualDiversity.pmi"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.ContextualDiversity.pmi">[docs]</a>    <span class="k">def</span> <span class="nf">pmi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tgt_w</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute PMI score of a word pair</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tgt_w : str</span>
+<span class="sd">            Target word</span>
+<span class="sd">        cntx_w : str</span>
+<span class="sd">            Context word</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            PMI value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Nwc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooccur_freq</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">tgt_w</span><span class="p">,</span> <span class="n">cntx_w</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Nwc</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">Nw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_w_freq</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tgt_w</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">Nc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cntx_w_freq</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cntx_w</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">Pw</span> <span class="o">=</span> <span class="n">Nw</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_w_size</span>
+        <span class="n">Pc</span> <span class="o">=</span> <span class="n">Nc</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cntx_w_size</span>
+        <span class="n">Pwc</span> <span class="o">=</span> <span class="n">Nwc</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">coocurr_size</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span> <span class="n">Pwc</span> <span class="o">/</span> <span class="p">(</span><span class="n">Pw</span> <span class="o">*</span> <span class="n">Pc</span><span class="p">)</span> <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Yongfu Liao
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>
