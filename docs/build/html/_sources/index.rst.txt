@@ -3,13 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to yft's documentation!
-===============================
+Miscellaneous Functions by Yongfu Liao
+======================================
+
+Installation
+------------
+
+.. code-block:: bash
+
+   pip install yft
+
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
+   :numbered:
 
+   index
+   string
+   lexstats
 
 
 Indices and tables
