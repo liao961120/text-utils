@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Miscellaneous Functions by Yongfu Liao
-======================================
+Miscellaneous functions for text processing
+===========================================
 
 Installation
 ------------
