@@ -133,6 +133,7 @@ def all_zh(x: str):
     bool
         True if the input string has only Chinese characters, else False
     """
+    if x == '': return False
     for char in x:
         if not ((char > u'\u4e00' and char < u'\u9fff') or (char > u'\u3400' and char < u'\u4DBF')):
             return False
