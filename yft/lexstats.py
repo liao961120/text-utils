@@ -111,15 +111,18 @@ class TF_IDF:
         -------
         dict
             A dict in the format of:
-            {
-                "<docid>": {
-                    "<word>": <tf-idf-score>,
-                    "<word>": <tf-idf-score>,
+
+            .. code-block:: python
+
+                {
+                    "<docid>": {
+                        "<word>": <tf-idf-score>,
+                        "<word>": <tf-idf-score>,
+                        ...
+                    },
+                    "<docid>": {...},
                     ...
-                },
-                "<docid>": {...},
-                ...
-            }
+                }
 
         Examples
         --------
@@ -141,6 +144,8 @@ class TF_IDF:
 
 
 class ContextualDiversity:
+    """Compute contextual diversity scores for words in a corpus
+    """
 
     def __init__(self, fp:str, tk_sep:str=u'\u3000', WINDOW:int=4, SM:float=0.75):
         """Initialize corpus and compute PPMI co-occurrence scores
