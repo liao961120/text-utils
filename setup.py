@@ -4,7 +4,7 @@ with open("README.md", encoding="utf-8") as f:
       long_description = f.read().strip()
 
 setup(name='yft',
-      version='0.1.0',
+      version='0.1.1',
       description='Utility functions for text processing',
       long_description=long_description,
       long_description_content_type='text/markdown',

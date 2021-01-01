@@ -13,9 +13,12 @@ def read_rawtext_as_words(fp:str, tk_sep=u'\u3000'):
     str
         A word
     
-    Details
-    -------
+    Notes
+    -----
     The structure of the (default) corpus file:
+
+    .. code-block:: text
+
         <tk>\u3000<tk>\u3000<tk>\u3000<tk>\u3000...<tk>\n
         <tk>\u3000<tk>\u3000<tk>\u3000<tk>\u3000...<tk>\n
         ...
