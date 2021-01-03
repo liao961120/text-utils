@@ -31,7 +31,6 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -86,6 +85,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../string.html">1. String Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../lexstats.html">2. Lexical Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../corp_readers.html">3. Corpus Readers</a></li>
 </ul>
 
             
@@ -285,6 +285,7 @@
 <span class="sd">    bool</span>
 <span class="sd">        True if the input string has only Chinese characters, else False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">((</span><span class="n">char</span> <span class="o">&gt;</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u4e00</span><span class="s1">&#39;</span> <span class="ow">and</span> <span class="n">char</span> <span class="o">&lt;</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u9fff</span><span class="s1">&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">char</span> <span class="o">&gt;</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u3400</span><span class="s1">&#39;</span> <span class="ow">and</span> <span class="n">char</span> <span class="o">&lt;</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u4DBF</span><span class="s1">&#39;</span><span class="p">)):</span>
             <span class="k">return</span> <span class="kc">False</span>

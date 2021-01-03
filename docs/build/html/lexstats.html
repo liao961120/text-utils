@@ -31,13 +31,13 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Corpus Readers" href="corp_readers.html" />
     <link rel="prev" title="1. String Processing" href="string.html" /> 
 </head>
 
@@ -87,6 +87,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="string.html">1. String Processing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Lexical Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="corp_readers.html">3. Corpus Readers</a></li>
 </ul>
 
             
@@ -154,10 +155,9 @@
             
   <div class="section" id="lexical-statistics">
 <h1><span class="section-number">2. </span>Lexical Statistics<a class="headerlink" href="#lexical-statistics" title="Permalink to this headline">¶</a></h1>
-<p>This page provide documentation for …</p>
-<dl class="class">
+<dl class="py class">
 <dt id="yft.lexstats.TF_IDF">
-<em class="property">class </em><code class="sig-prename descclassname">yft.lexstats.</code><code class="sig-name descname">TF_IDF</code><span class="sig-paren">(</span><em class="sig-param">docset: Union[dict, list]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#TF_IDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.TF_IDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">yft.lexstats.</code><code class="sig-name descname">TF_IDF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">docset</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>dict<span class="p">, </span>list<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#TF_IDF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.TF_IDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute tf-idf scores for terms in a list of documents</p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
@@ -174,9 +174,9 @@
 </tr>
 </tbody>
 </table>
-<dl class="method">
+<dl class="py method">
 <dt id="yft.lexstats.TF_IDF.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">word: str</em>, <em class="sig-param">doc_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#TF_IDF.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.TF_IDF.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">word</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">doc_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#TF_IDF.score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.TF_IDF.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute tf-idf score of a term in a particular document</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -216,7 +216,7 @@ the TF_IDF obj</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="yft.lexstats.TF_IDF.score_all">
 <code class="sig-name descname">score_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#TF_IDF.score_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.TF_IDF.score_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute tf-idf scores for all terms in the docset</p>
@@ -254,10 +254,15 @@ the TF_IDF obj</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="yft.lexstats.ContextualDiversity">
-<em class="property">class </em><code class="sig-prename descclassname">yft.lexstats.</code><code class="sig-name descname">ContextualDiversity</code><span class="sig-paren">(</span><em class="sig-param">fp: str</em>, <em class="sig-param">tk_sep: str = 'u3000'</em>, <em class="sig-param">WINDOW: int = 4</em>, <em class="sig-param">SM: float = 0.75</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">yft.lexstats.</code><code class="sig-name descname">ContextualDiversity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fp</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">tk_sep</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\u3000'</span></em>, <em class="sig-param"><span class="n">WINDOW</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">4</span></em>, <em class="sig-param"><span class="n">SM</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.75</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute contextual diversity scores for words in a corpus</p>
+<p class="rubric">References</p>
+<p>[1] Levy, O., Goldberg, Y., &amp; Dagan, I. (2015). Improving 
+Distributional Similarity with Lessons Learned from Word Embeddings.</p>
+<p>[2] Jurafsky, D. (2015, July). Distributional (Vector) Semantics.
+<a class="reference external" href="https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf">https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf</a></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -273,9 +278,9 @@ the TF_IDF obj</p>
 </tr>
 </tbody>
 </table>
-<dl class="method">
+<dl class="py method">
 <dt id="yft.lexstats.ContextualDiversity.diversity_scores">
-<code class="sig-name descname">diversity_scores</code><span class="sig-paren">(</span><em class="sig-param">words: Sequence = None</em>, <em class="sig-param">return_graph=False</em>, <em class="sig-param">max_vocab_size: int = 10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity.diversity_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity.diversity_scores" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">diversity_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">words</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Sequence<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_graph</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_vocab_size</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10000</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity.diversity_scores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity.diversity_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantify contextual diversity of each word in the corpus</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -301,20 +306,19 @@ words.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>Implementation of the contexual diversity (polysemous) measure for 
-words in Hamilton et al. (2016). For the purpose of intuitive 
+words in [1]. For the purpose of intuitive 
 interpretation, the original scores (local clustering coefficients) 
 are reversed by (1 - ori_score), such that a higher score indicates 
 higher contextual diversity of a word.</p>
 <p class="rubric">References</p>
-<p>Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). Diachronic Word 
-Embeddings Reveal Statistical Laws of Semantic Change. In Proceedings 
-of the 54th Annual Meeting of the Association for Computational 
-Linguistics (pp. 1489–1501).</p>
+<p>[1] Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). 
+Diachronic Word Embeddings Reveal Statistical Laws of Semantic
+Change.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="yft.lexstats.ContextualDiversity.pmi">
-<code class="sig-name descname">pmi</code><span class="sig-paren">(</span><em class="sig-param">tgt_w: str</em>, <em class="sig-param">cntx_w: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity.pmi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity.pmi" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pmi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tgt_w</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cntx_w</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity.pmi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity.pmi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute PMI score of a word pair</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -345,6 +349,8 @@ Linguistics (pp. 1489–1501).</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="corp_readers.html" class="btn btn-neutral float-right" title="3. Corpus Readers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="string.html" class="btn btn-neutral float-left" title="1. String Processing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

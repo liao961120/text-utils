@@ -145,6 +145,14 @@ class TF_IDF:
 
 class ContextualDiversity:
     """Compute contextual diversity scores for words in a corpus
+
+    References
+    ----------
+    [1] Levy, O., Goldberg, Y., & Dagan, I. (2015). Improving 
+    Distributional Similarity with Lessons Learned from Word Embeddings.
+    
+    [2] Jurafsky, D. (2015, July). Distributional (Vector) Semantics.
+    https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf
     """
 
     def __init__(self, fp:str, tk_sep:str=u'\u3000', WINDOW:int=4, SM:float=0.75):
@@ -161,11 +169,6 @@ class ContextualDiversity:
             Sliding window size used in PPMI computation, by default 4
         SM : float, optional
             Smoothing factor used in PPMI computation, by default 0.75
-        
-        References
-        ----------
-        Levy, O., Goldberg, Y., & Dagan, I. (2015). Improving Distributional Similarity with Lessons Learned from Word Embeddings. Transactions of the Association for Computational Linguistics, 3, 211–225.
-        Jurafsky, D. (2015, July). Distributional (Vector) Semantics. https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf
         """
 
         # Construct corpus
@@ -234,17 +237,16 @@ class ContextualDiversity:
         Notes
         -----
         Implementation of the contexual diversity (polysemous) measure for 
-        words in Hamilton et al. (2016). For the purpose of intuitive 
+        words in [1]. For the purpose of intuitive 
         interpretation, the original scores (local clustering coefficients) 
         are reversed by (1 - ori_score), such that a higher score indicates 
         higher contextual diversity of a word.
 
         References
         ----------
-        Hamilton, W. L., Leskovec, J., & Jurafsky, D. (2016). Diachronic Word 
-        Embeddings Reveal Statistical Laws of Semantic Change. In Proceedings 
-        of the 54th Annual Meeting of the Association for Computational 
-        Linguistics (pp. 1489–1501).
+        [1] Hamilton, W. L., Leskovec, J., & Jurafsky, D. (2016). 
+        Diachronic Word Embeddings Reveal Statistical Laws of Semantic
+        Change.
         """
         vocab = sorted(self.w_freq.items(), key=lambda x: x[1], reverse=True)[:max_vocab_size]
         vocab = [x[0] for x in vocab]

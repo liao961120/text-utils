@@ -21,6 +21,7 @@ Installation
 
    string
    lexstats
+   corp_readers
 
 
 Indices and tables
