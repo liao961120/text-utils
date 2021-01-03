@@ -258,6 +258,11 @@ the TF_IDF obj</p>
 <dt id="yft.lexstats.ContextualDiversity">
 <em class="property">class </em><code class="sig-prename descclassname">yft.lexstats.</code><code class="sig-name descname">ContextualDiversity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fp</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">tk_sep</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\u3000'</span></em>, <em class="sig-param"><span class="n">WINDOW</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">4</span></em>, <em class="sig-param"><span class="n">SM</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.75</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yft/lexstats.html#ContextualDiversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yft.lexstats.ContextualDiversity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute contextual diversity scores for words in a corpus</p>
+<p class="rubric">References</p>
+<p>[1] Levy, O., Goldberg, Y., &amp; Dagan, I. (2015). Improving 
+Distributional Similarity with Lessons Learned from Word Embeddings.</p>
+<p>[2] Jurafsky, D. (2015, July). Distributional (Vector) Semantics.
+<a class="reference external" href="https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf">https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf</a></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -301,15 +306,14 @@ words.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>Implementation of the contexual diversity (polysemous) measure for 
-words in Hamilton et al. (2016). For the purpose of intuitive 
+words in [1]. For the purpose of intuitive 
 interpretation, the original scores (local clustering coefficients) 
 are reversed by (1 - ori_score), such that a higher score indicates 
 higher contextual diversity of a word.</p>
 <p class="rubric">References</p>
-<p>Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). Diachronic Word 
-Embeddings Reveal Statistical Laws of Semantic Change. In Proceedings 
-of the 54th Annual Meeting of the Association for Computational 
-Linguistics (pp. 1489–1501).</p>
+<p>[1] Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). 
+Diachronic Word Embeddings Reveal Statistical Laws of Semantic
+Change.</p>
 </dd></dl>
 
 <dl class="py method">

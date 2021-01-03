@@ -297,6 +297,14 @@
 
 <div class="viewcode-block" id="ContextualDiversity"><a class="viewcode-back" href="../../lexstats.html#yft.lexstats.ContextualDiversity">[docs]</a><span class="k">class</span> <span class="nc">ContextualDiversity</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Compute contextual diversity scores for words in a corpus</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Levy, O., Goldberg, Y., &amp; Dagan, I. (2015). Improving </span>
+<span class="sd">    Distributional Similarity with Lessons Learned from Word Embeddings.</span>
+<span class="sd">    </span>
+<span class="sd">    [2] Jurafsky, D. (2015, July). Distributional (Vector) Semantics.</span>
+<span class="sd">    https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">tk_sep</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u3000</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">WINDOW</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">SM</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.75</span><span class="p">):</span>
@@ -313,11 +321,6 @@
 <span class="sd">            Sliding window size used in PPMI computation, by default 4</span>
 <span class="sd">        SM : float, optional</span>
 <span class="sd">            Smoothing factor used in PPMI computation, by default 0.75</span>
-<span class="sd">        </span>
-<span class="sd">        References</span>
-<span class="sd">        ----------</span>
-<span class="sd">        Levy, O., Goldberg, Y., &amp; Dagan, I. (2015). Improving Distributional Similarity with Lessons Learned from Word Embeddings. Transactions of the Association for Computational Linguistics, 3, 211–225.</span>
-<span class="sd">        Jurafsky, D. (2015, July). Distributional (Vector) Semantics. https://web.stanford.edu/~jurafsky/li15/lec3.vector.pdf</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Construct corpus</span>
@@ -386,17 +389,16 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        Implementation of the contexual diversity (polysemous) measure for </span>
-<span class="sd">        words in Hamilton et al. (2016). For the purpose of intuitive </span>
+<span class="sd">        words in [1]. For the purpose of intuitive </span>
 <span class="sd">        interpretation, the original scores (local clustering coefficients) </span>
 <span class="sd">        are reversed by (1 - ori_score), such that a higher score indicates </span>
 <span class="sd">        higher contextual diversity of a word.</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). Diachronic Word </span>
-<span class="sd">        Embeddings Reveal Statistical Laws of Semantic Change. In Proceedings </span>
-<span class="sd">        of the 54th Annual Meeting of the Association for Computational </span>
-<span class="sd">        Linguistics (pp. 1489–1501).</span>
+<span class="sd">        [1] Hamilton, W. L., Leskovec, J., &amp; Jurafsky, D. (2016). </span>
+<span class="sd">        Diachronic Word Embeddings Reveal Statistical Laws of Semantic</span>
+<span class="sd">        Change.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vocab</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_freq</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">max_vocab_size</span><span class="p">]</span>
         <span class="n">vocab</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">]</span>
